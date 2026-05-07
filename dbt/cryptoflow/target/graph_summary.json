@@ -1,0 +1,1 @@
+{"_invocation_id": "fee74d65-a524-496c-8208-0302b2f0f105", "linked": {"0": {"name": "model.cryptoflow.stg_coins", "type": "model", "succ": [1]}, "1": {"name": "model.cryptoflow.mart_top_movers", "type": "model"}}}

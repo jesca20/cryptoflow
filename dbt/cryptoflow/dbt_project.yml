@@ -1,0 +1,15 @@
+name: cryptoflow
+version: "1.0.0"
+profile: cryptoflow
+
+model-paths: ["models"]
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  cryptoflow:
+    staging:
+      +schema: staging
+      +materialized: view
+    mart:
+      +schema: mart
+      +materialized: table
