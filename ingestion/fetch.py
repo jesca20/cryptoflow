@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
-from datetime import datetime
+from datetime import datetime, timezone
 from db.config import DB_CONFIG
 
 API_URL = "https://api.coingecko.com/api/v3/coins/markets"
@@ -37,12 +37,20 @@ def parse(data):
     df["price_change_24h"] = pd.to_numeric(df["price_change_percentage_24h"], errors="coerce")
     df.drop(columns=["price_change_percentage_24h"], inplace=True)
 
-    df["ingested_at"] = datetime.now(datetime.timezone.utc)
+    df["ingested_at"] = datetime.now(timezone.utc)
     return df
 
 def load(df, conn):
     cur = conn.cursor()
-    rows = [tuple(row) for row in df.itertuples(index=False)]
+    def to_py(v):
+        try:
+            if pd.isna(v):
+                return None
+        except (TypeError, ValueError):
+            pass
+        return v.item() if hasattr(v, "item") else v
+
+    rows = [tuple(to_py(v) for v in row) for row in df.itertuples(index=False)]
     execute_values(cur, """
         INSERT INTO raw.coins (
             id, symbol, name,
