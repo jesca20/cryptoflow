@@ -1,3 +1,11 @@
-config.py
 venv/
 *.duckdb
+*.pyc
+__pycache__/
+.DS_Store
+config.py
+db/config.py
+.env
+airflow/
+logs/
+.claude/
